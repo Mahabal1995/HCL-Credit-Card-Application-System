@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import './Applicant.css'
+import "./Applicant.css";
 
 const Applicant = () => {
   const [form, setForm] = useState({
@@ -8,7 +8,7 @@ const Applicant = () => {
     dob: "",
     phone: "",
     pan: "",
-    annualIncome: ""
+    annualIncome: "",
   });
 
   const [successMessage, setSuccessMessage] = useState("");
@@ -23,7 +23,7 @@ const Applicant = () => {
       const res = await fetch("http://localhost:3000/applications", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form)
+        body: JSON.stringify(form),
       });
 
       const data = await res.json();
@@ -56,7 +56,12 @@ const Applicant = () => {
 
           <div className="form-group">
             <label>Date of Birth</label>
-            <input type="date" name="dob" value={form.dob} onChange={handleChange} />
+            <input
+              type="date"
+              name="dob"
+              value={form.dob}
+              onChange={handleChange}
+            />
           </div>
 
           <div className="form-group">
