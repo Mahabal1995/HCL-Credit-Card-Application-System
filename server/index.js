@@ -7,27 +7,26 @@ import "dotenv/config";
 // ✅ Routes import
 import approverRoutes from "./routes/approverRoutes.js";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
+import applicationRoutes from "./routes/applications.js";
 
 const app = express();
 
 app.use(helmet());
-
 app.use(
   cors({
-    origin: "*", // change later when frontend domain is fixed
+    origin: "*",
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: false,
   }),
 );
 
 app.use(express.json());
-/* ---------- Routes ---------- */
 
 // Approver dashboard APIs
 app.use("/api/approver", approverRoutes);
 app.use("/api/dashboard", dashboardRoutes);
+app.use("/applications", applicationRoutes);
 
-/* ---------- start server ---------- */
 const startServer = async () => {
   const PORT = process.env.PORT || 3000;
 
