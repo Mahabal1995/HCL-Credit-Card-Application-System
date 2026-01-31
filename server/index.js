@@ -1,31 +1,26 @@
-import express from "express";
-import helmet from "helmet";
-import cors from "cors";
-import { connectDB } from "./config/db.js";
-import "dotenv/config";
+import express from 'express';
+import helmet from 'helmet';
+import cors from 'cors';
+import { connectDB } from './config/db.js';
+import 'dotenv/config';
 
-// ✅ Routes import
-import approverRoutes from "./routes/approverRoutes.js";
+import approverRoutes from './routes/approverRoutes.js';
+import applicationRoutes from './routes/applications.js'; // correct import
 
 const app = express();
 
 app.use(helmet());
-
-app.use(
-  cors({
-    origin: "*", // change later when frontend domain is fixed
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-    credentials: false,
-  }),
-);
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+  credentials: false
+}));
 
 app.use(express.json());
-/* ---------- Routes ---------- */
 
-// Approver dashboard APIs
-app.use("/api/approver", approverRoutes);
+app.use('/api/approver', approverRoutes);
+app.use('/applications', applicationRoutes);
 
-/* ---------- start server ---------- */
 const startServer = async () => {
   const PORT = process.env.PORT || 3000;
 
