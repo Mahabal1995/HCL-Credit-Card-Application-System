@@ -6,6 +6,7 @@ import "dotenv/config";
 
 // ✅ Routes import
 import approverRoutes from "./routes/approverRoutes.js";
+import dashboardRoutes from "./routes/dashboardRoutes.js";
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use(express.json());
 
 // Approver dashboard APIs
 app.use("/api/approver", approverRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 
 /* ---------- start server ---------- */
 const startServer = async () => {

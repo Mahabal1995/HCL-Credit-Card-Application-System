@@ -8,6 +8,7 @@ import {
   approveApplication,
   rejectApplication,
   subjectiveLimitCheck,
+  createCreditScore,
 } from "../controllers/approverController.js";
 
 import { protectApprover } from "../middleware/authMiddleware.js";
@@ -23,5 +24,6 @@ router.post("/approve/:id", approveApplication);
 router.post("/reject/:id", rejectApplication);
 
 router.post("/subjective-limit", subjectiveLimitCheck);
+router.get("/credirscore/:pan", createCreditScore);
 
 export default router;

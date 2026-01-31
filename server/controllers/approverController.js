@@ -4,7 +4,6 @@ import {
   generateCreditScore,
 } from "../helpers/creditService.js";
 
-
 // ✅ TAB 1: List All Applications
 export const getAllApplications = async (req, res) => {
   try {
@@ -14,7 +13,6 @@ export const getAllApplications = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-
 
 // ✅ TAB 1: View Application Details
 export const getApplicationDetails = async (req, res) => {
@@ -31,7 +29,6 @@ export const getApplicationDetails = async (req, res) => {
   }
 };
 
-
 // ✅ TAB 2: Applicant History by PAN
 export const getApplicantHistory = async (req, res) => {
   try {
@@ -42,7 +39,6 @@ export const getApplicantHistory = async (req, res) => {
   }
 };
 
-
 // ✅ TAB 2: Approve Application
 export const approveApplication = async (req, res) => {
   try {
@@ -51,7 +47,7 @@ export const approveApplication = async (req, res) => {
     if (!app) return res.status(404).json({ message: "Not found" });
 
     // Credit Score + Limit Calculation
-    app.creditScore = generateCreditScore();
+    // app.creditScore = generateCreditScore();
     app.creditLimit = subjectiveCreditLimit(app.annualIncome);
 
     app.status = "APPROVED";
@@ -67,7 +63,6 @@ export const approveApplication = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-
 
 // ✅ TAB 2: Reject Application
 export const rejectApplication = async (req, res) => {
@@ -90,7 +85,6 @@ export const rejectApplication = async (req, res) => {
   }
 };
 
-
 // ✅ TAB 3: Subjective Limit Calculator API
 export const subjectiveLimitCheck = (req, res) => {
   const { income } = req.body;
@@ -101,4 +95,10 @@ export const subjectiveLimitCheck = (req, res) => {
     annualIncome: income,
     suggestedLimit: limit,
   });
+};
+
+export const createCreditScore = (req, res) => {
+  const pan = req.query.pan;
+  const creditScore = generateCreditScore(pan);
+  return res.json(creditScore);
 };

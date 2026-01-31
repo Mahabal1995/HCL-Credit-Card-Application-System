@@ -4,7 +4,15 @@ export const subjectiveCreditLimit = (income) => {
   if (income <= 500000) return 100000;
   return 200000; // subjective high limit
 };
+const normalizePan = (pan) => pan?.toUpperCase();
+export const generateCreditScore = (pan) => {
+  const normalizedPan = normalizePan(pan);
+  let hash = 0;
 
-export const generateCreditScore = () => {
-  return Math.floor(650 + Math.random() * 200); // 650–850
+  for (const ch of normalizedPan) {
+    hash += ch.charCodeAt(0);
+  }
+
+  const score = 300 + (hash % 601);
+  return score;
 };
