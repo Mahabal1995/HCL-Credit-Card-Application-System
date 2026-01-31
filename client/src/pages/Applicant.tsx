@@ -1,64 +1,62 @@
 import { useState } from "react";
-import "./Applicant.css";
+import { useNavigate } from "react-router-dom";
+import './Applicant.css'
 
-export default function Applicant() {
+const Applicant = () => {
   const [form, setForm] = useState({
     name: "",
     dob: "",
     phone: "",
     pan: "",
-    annualIncome: "",
+    annualIncome: ""
   });
 
-  const [applicationNumber, setApplicationNumber] = useState<string | null>(
-    null,
-  );
+  const [successMessage, setSuccessMessage] = useState("");
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const submitApplication = async () => {
-    if (!/^[6-9]\d{9}$/.test(form.phone)) {
-      alert("Please enter a valid 10-digit mobile number");
-      return;
-    }
-
-    const res = await fetch(
-      import.meta.env.VITE_API_BASE_URL + "/applications",
-      {
+    try {
+      const res = await fetch("http://localhost:3000/applications", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      },
-    );
-    
-    const data = await res.json();
-    setApplicationNumber(data.applicationNumber);
+        body: JSON.stringify(form)
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setSuccessMessage("Application submitted successfully!");
+        // Redirect after 2 seconds
+        setTimeout(() => navigate("/"), 2000);
+      } else {
+        alert(data.message || "Submission failed");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Server error");
+    }
   };
 
   return (
     <div className="page">
       <div className="container">
-        <header className="header">
+        <div className="header">
           <h1>Credit Card Application</h1>
-          <p>Complete the form below to apply for a new credit card</p>
-        </header>
+        </div>
 
         <div className="form-grid">
           <div className="form-group">
-            <label>Full Name</label>
+            <label>Name</label>
             <input name="name" value={form.name} onChange={handleChange} />
           </div>
 
           <div className="form-group">
             <label>Date of Birth</label>
-            <input
-              type="date"
-              name="dob"
-              value={form.dob}
-              onChange={handleChange}
-            />
+            <input type="date" name="dob" value={form.dob} onChange={handleChange} />
           </div>
 
           <div className="form-group">
@@ -73,12 +71,12 @@ export default function Applicant() {
           </div>
 
           <div className="form-group">
-            <label>PAN Number</label>
+            <label>PAN</label>
             <input name="pan" value={form.pan} onChange={handleChange} />
           </div>
 
           <div className="form-group">
-            <label>Annual Income (₹)</label>
+            <label>Annual Income</label>
             <input
               type="number"
               name="annualIncome"
@@ -89,16 +87,18 @@ export default function Applicant() {
         </div>
 
         <div className="actions">
-          <button onClick={submitApplication}>Submit Application</button>
+          <button onClick={submitApplication}>Submit</button>
         </div>
 
-        {applicationNumber && (
+        {successMessage && (
           <div className="success">
-            ✅ Application Submitted Successfully
-            <span>Application No: {applicationNumber}</span>
+            {successMessage}
+            <span>Redirecting to home...</span>
           </div>
         )}
       </div>
     </div>
   );
-}
+};
+
+export default Applicant;
