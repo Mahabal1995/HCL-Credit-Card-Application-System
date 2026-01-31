@@ -1,15 +1,30 @@
 import Application from "../models/Application.js";
 import {
   subjectiveCreditLimit,
-  generateCreditScore,
+  fetchCreditScore,
+  decryptPAN,
 } from "../helpers/creditService.js";
 
 
 // ✅ TAB 1: List All Applications
 export const getAllApplications = async (req, res) => {
   try {
+    console.log("Fetching all applications");
     const applications = await Application.find();
-    res.json(applications);
+
+    const withDecryptedPAN = applications.map((app) => {
+      const obj = app.toObject();
+      try {
+        obj.panCard = decryptPAN(obj.panCard);
+      } catch (e) {
+        // if decryption fails, leave the stored value
+        obj.panCard = obj.panCard;
+      }
+      return obj;
+    });
+
+    console.log(`Found ${withDecryptedPAN.length} applications`);
+    res.json(withDecryptedPAN);
   } catch (err) {
     res.status(500).json({ message: "Server error" });
   }
@@ -51,7 +66,7 @@ export const approveApplication = async (req, res) => {
     if (!app) return res.status(404).json({ message: "Not found" });
 
     // Credit Score + Limit Calculation
-    app.creditScore = generateCreditScore();
+    app.creditScore = fetchCreditScore();
     app.creditLimit = subjectiveCreditLimit(app.annualIncome);
 
     app.status = "APPROVED";

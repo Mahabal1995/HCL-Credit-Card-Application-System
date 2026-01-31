@@ -1,3 +1,5 @@
+import crypto from "crypto";
+
 export const subjectiveCreditLimit = (income) => {
   if (income <= 200000) return 50000;
   if (income <= 300000) return 75000;
@@ -26,4 +28,16 @@ export const encryptPAN = (pan) => {
   let encrypted = cipher.update(pan, "utf8", "hex");
   encrypted += cipher.final("hex");
   return encrypted;
+};
+
+export const decryptPAN = (encryptedPan) => {
+  if (!encryptedPan) throw new Error("Encrypted PAN is required");
+  const decipher = crypto.createDecipheriv(
+    "aes-256-cbc",
+    Buffer.from(process.env.PAN_SECRET_KEY, "hex"),
+    Buffer.from(process.env.PAN_IV, "hex"),
+  );
+  let decrypted = decipher.update(encryptedPan, "hex", "utf8");
+  decrypted += decipher.final("utf8");
+  return decrypted;
 };
