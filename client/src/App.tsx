@@ -1,14 +1,14 @@
 import { Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Applicant from './pages/Applicant';
-// import Approver from './pages/Approver';
+import ApproverDashboard from './pages/ApproverDashboard';
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/applicant" element={<Applicant />} />
-      {/* <Route path="/approver" element={<Approver />} /> */}
+      <Route path="/approver" element={<ApproverDashboard />} />
     </Routes>
   );
 }
